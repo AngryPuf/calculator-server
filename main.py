@@ -14,14 +14,13 @@ def calc():
     expr = request.args.get("expr", "")
     try:
         # Allow only math functions and safe built-ins
-        allowed_names.update({
-            "log10": math.log10,
-        })
         allowed_names = {
             k: v for k, v in math.__dict__.items() if not k.startswith("__")
         }
         allowed_names.update({"abs": abs, "round": round})
-
+        allowed_names.update({
+            "log10": math.log10,
+        })
         # Evaluate safely
         result = eval(expr, {"__builtins__": None}, allowed_names)
         return str(result)
