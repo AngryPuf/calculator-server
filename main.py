@@ -1,19 +1,27 @@
 from flask import Flask, request
+import math
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route("/")
 def home():
     return "Server is running!"
 
-@app.route('/add')
-def add():
+@app.route("/calc")
+def calc():
+    expr = request.args.get("expr", "")
     try:
-        a = float(request.args.get('a', 0))
-        b = float(request.args.get('b', 0))
-        return str(a + b)
-    except:
-        return "Error", 400
+        # Allow only math functions and safe built-ins
+        allowed_names = {
+            k: v for k, v in math.__dict__.items() if not k.startswith("__")
+        }
+        allowed_names.update({"abs": abs, "round": round})
 
-if __name__ == '__main__':
-    app.run()
+        # Evaluate safely
+        result = eval(expr, {"__builtins__": None}, allowed_names)
+        return str(result)
+    except Exception:
+        return "Syntax Error", 400
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=81)
