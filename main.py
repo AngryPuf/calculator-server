@@ -18,7 +18,7 @@ def calc():
             k: v for k, v in math.__dict__.items() if not k.startswith("__")
         }
         allowed_names.update({"abs": abs, "round": round})
-        allowed_names.update({"log10": math.log10,"log": lambda x, base=math.e: math.log(x, base), "factorial": math.factorial
+        allowed_names.update({"log10": math.log10,"log": lambda x, base=math.e: math.log(x, base), "factorial": math.factorial, "sqrt": math.sqrt
         })
         
         # Evaluate safely
